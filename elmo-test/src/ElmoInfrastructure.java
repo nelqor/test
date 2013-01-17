@@ -62,7 +62,7 @@ class ElmoInfrastructure implements Closeable {
 			module.addConcept(concept);
 		}
 		elmoFactory = new SesameManagerFactory(module, repository);
-		elmoFactory.setQueryLanguage(QueryLanguage.SERQL);
+		elmoFactory.setQueryLanguage(QueryLanguage.SPARQL);
 		elmoManager = elmoFactory.createElmoManager();
 	}
 

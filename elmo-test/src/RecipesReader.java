@@ -1,5 +1,3 @@
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -13,7 +11,7 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.config.RepositoryConfigException;
 
-public class UrlReaderElmo {
+public class RecipesReader {
 
 	public static void main(final String[] args) throws IOException,
 			RepositoryException, RepositoryConfigException,
@@ -35,7 +33,7 @@ public class UrlReaderElmo {
 			try {
 				final String site = "https://www.magiclands.ru";
 				final String url = site + "/library/recipes/jeweller/";
-//				try (final InputStream is = getUrlStream(url)) {
+//				try (final InputStream is = HtmlInput.getUrlStream(url)) {
 				final List<Recipe> recipes;
 				try (final InputStream is = FileInput.getFileStream("jeweller.html")) {
 					final HtmlCleaner c = new HtmlCleaner();
@@ -49,26 +47,22 @@ public class UrlReaderElmo {
 				transaction.commit();
 			}
 
-			// repo.add(recipes);
-			// repo.commit();
-			// final URI uri1 = new URIImpl("uri:uri1");
-			// repo.connection.add(uri1, uri1, uri1);
 			System.out.println("----- updated ------");
 			repo.print();
 			int recipesCount = 0;
-			for (final Recipe recipe : repo.getElmoManager().findAll(
+			for (@SuppressWarnings("unused") final Recipe recipe : repo.getElmoManager().findAll(
 					Recipe.class)) {
 				recipesCount++;
 			}
 			System.out.println("Recipes: " + recipesCount);
 			int componentsCount = 0;
-			for (final Component component : repo.getElmoManager().findAll(
+			for (@SuppressWarnings("unused") final Component component : repo.getElmoManager().findAll(
 					Component.class)) {
 				componentsCount++;
 			}
 			System.out.println("Components: " + componentsCount);
 			int itemsCount = 0;
-			for (final Item item : repo.getElmoManager().findAll(Item.class)) {
+			for (@SuppressWarnings("unused") final Item item : repo.getElmoManager().findAll(Item.class)) {
 				itemsCount++;
 			}
 			System.out.println("Items: " + itemsCount);
