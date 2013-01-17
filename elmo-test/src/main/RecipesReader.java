@@ -1,6 +1,7 @@
 package main;
 
 import infrastructure.ElmoInfrastructure;
+import infrastructure.Finder;
 import input.FileInput;
 
 import java.io.IOException;
@@ -29,32 +30,48 @@ public class RecipesReader {
 			IllegalAccessException {
 		try (final ElmoInfrastructure repo = new ElmoInfrastructure(
 				"target/repo", "test-db", JAVA_BEANS)) {
-			System.out.println("----- initial ------");
-			repo.print();
+//			System.out.println("----- initial ------");
+//			repo.print();
 			final RepositoryConnection cxn = repo.getConnection();
 			cxn.clear();
 			cxn.commit();
 			cxn.close();
-
+//			repo.getElmoManager().clear();
 			repo.beginTransaction();
 			try {
 				final String site = "https://www.magiclands.ru";
-				final String url = site + "/library/recipes/jeweller/";
+				String url = site + "/library/recipes/jeweller/";
 //				try (final InputStream is = HtmlInput.getUrlStream(url)) {
-				final List<Recipe> recipes;
 				try (final InputStream is = FileInput.getFileStream("jeweller.html")) {
 					final HtmlCleaner c = new HtmlCleaner();
 					final TagNode rootNode = c.clean(is);
-					recipes = RecipesParser.parseRecipes(rootNode, site, url, repo);
-					for (final Recipe recipe : recipes) {
-						System.out.println(recipe);
+					for (final Recipe recipe : RecipesParser.parseRecipes(rootNode, site, url, repo)) {
+//						System.out.println(recipe);
+					}
+				}
+				url = site + "/library/recipes/artisan/";
+//				try (final InputStream is = HtmlInput.getUrlStream(url)) {
+				try (final InputStream is = FileInput.getFileStream("artisan.html")) {
+					final HtmlCleaner c = new HtmlCleaner();
+					final TagNode rootNode = c.clean(is);
+					for (final Recipe recipe : RecipesParser.parseRecipes(rootNode, site, url, repo)) {
+//						System.out.println(recipe);
+					}
+				}
+				url = site + "/library/recipes/alchemy/";
+//				try (final InputStream is = HtmlInput.getUrlStream(url)) {
+				try (final InputStream is = FileInput.getFileStream("alchemy.html")) {
+					final HtmlCleaner c = new HtmlCleaner();
+					final TagNode rootNode = c.clean(is);
+					for (final Recipe recipe : RecipesParser.parseRecipes(rootNode, site, url, repo)) {
+//						System.out.println(recipe);
 					}
 				}
 			} finally {
 				repo.commitTransaction();
 			}
 			
-			System.out.println("----- updated ------");
+//			System.out.println("----- updated ------");
 			repo.print();
 			int recipesCount = 0;
 			for (@SuppressWarnings("unused") final Recipe recipe : repo.getElmoManager().findAll(
@@ -71,6 +88,10 @@ public class RecipesReader {
 			int itemsCount = 0;
 			for (@SuppressWarnings("unused") final Item item : repo.getElmoManager().findAll(Item.class)) {
 				itemsCount++;
+				System.out.println(item.getName()+"("+item+")");
+				for(Recipe recipe:Finder.findRecipesByComponent(repo, item))
+					System.out.println("\t"+recipe.getName()+"("+recipe+")");
+					
 			}
 			System.out.println("Items: " + itemsCount);
 		}

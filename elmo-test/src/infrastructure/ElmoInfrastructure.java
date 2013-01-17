@@ -7,11 +7,16 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.persistence.EntityTransaction;
+import javax.persistence.FlushModeType;
 
 import org.openrdf.elmo.ElmoModule;
 import org.openrdf.elmo.sesame.SesameManager;
 import org.openrdf.elmo.sesame.SesameManagerFactory;
+import org.openrdf.model.Literal;
+import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -68,6 +73,7 @@ public class ElmoInfrastructure implements Closeable {
 		elmoFactory = new SesameManagerFactory(module, repository);
 		elmoFactory.setQueryLanguage(QueryLanguage.SPARQL);
 		elmoManager = elmoFactory.createElmoManager();
+//		elmoManager.setFlushMode(FlushModeType.COMMIT);
 	}
 
 	public void print() throws RepositoryException {
@@ -78,9 +84,7 @@ public class ElmoInfrastructure implements Closeable {
 		try {
 			while (stmts.hasNext()) {
 				final Statement stmt = stmts.next();
-				System.out.println(String.format("%s %s %s", stmt.getSubject()
-						.stringValue(), stmt.getPredicate().stringValue(), stmt
-						.getObject().stringValue()));
+				System.out.println(stmt);
 				count++;
 			}
 		} finally {
@@ -89,7 +93,7 @@ public class ElmoInfrastructure implements Closeable {
 		}
 		System.out.println("Statements count: " + count);
 	}
-
+	
 	public RepositoryConnection getConnection() throws RepositoryException {
 		return repository.getConnection();
 	}

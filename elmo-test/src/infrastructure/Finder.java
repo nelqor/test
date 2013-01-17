@@ -1,25 +1,50 @@
 package infrastructure;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import javabeans.Item;
+import javabeans.Recipe;
+
 import org.openrdf.elmo.ElmoQuery;
 
 
 public class Finder {
 
 	@SuppressWarnings("unchecked")
-	public static <T>T findItem(final ElmoInfrastructure repo,
-			Class<T> cl, final String property, final String value) {
+	public static Item findItem(final ElmoInfrastructure repo,
+			Class<?> cl, final String property, final String value) {
 		final String queryStr = "SELECT ?item { ?item <:"+property+"> ?value . ?item a ?type . }";
+		System.out.println(queryStr);
 		final ElmoQuery query = repo.getElmoManager().createQuery(queryStr);
 		query.setParameter("value", value);
 		query.setType("type", cl);
-		final Iterator<?> result = query.evaluate();
-		while (result.hasNext()) {
-			final Object item = result.next();
-			if (cl.isInstance(item))
-				return ((T) item);
+		final Iterator<?> queryResult = query.evaluate();
+		while (queryResult.hasNext()) {
+			final Object item = queryResult.next();
+//			if (cl.isInstance(item))
+				return ((Item) item);
 		}
 		return null;
+	}
+
+	public static List<Recipe> findRecipesByComponent(//
+			ElmoInfrastructure repo, Item item) {
+		final String queryStr = "SELECT DISTINCT ?recipe {"+//
+			"?recipe <:components> ?components . "+//
+			"?components <http://www.w3.org/2000/01/rdf-schema#member> ?component . " +//
+			"?component <:item> ?item . "+//
+			"}";
+		final ElmoQuery query = repo.getElmoManager().createQuery(queryStr);
+		query.setParameter("item", item);
+		final Iterator<?> queryResult = query.evaluate();
+		ArrayList<Recipe> result = new ArrayList<Recipe>();
+		while (queryResult.hasNext()) {
+			final Object recipe = queryResult.next();
+			result.add((Recipe) recipe);
+		}
+		return result;
 	}
 
 }

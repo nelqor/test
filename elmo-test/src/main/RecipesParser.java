@@ -119,7 +119,9 @@ public class RecipesParser {
 															.create(Item.class);
 													item.setName(componentName);
 												}
+
 												component.setItem(item);
+												component.setUnit(unit);
 												component
 														.setCount(Double
 																.valueOf(countStr
