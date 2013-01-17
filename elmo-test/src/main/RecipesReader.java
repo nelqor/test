@@ -1,3 +1,5 @@
+package main;
+
 import infrastructure.ElmoInfrastructure;
 import input.FileInput;
 
@@ -9,8 +11,6 @@ import java.util.List;
 import javabeans.RecipeComponent;
 import javabeans.Item;
 import javabeans.Recipe;
-
-import javax.persistence.EntityTransaction;
 
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;

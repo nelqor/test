@@ -1,4 +1,7 @@
+package main;
+
 import infrastructure.ElmoInfrastructure;
+import infrastructure.Finder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +110,8 @@ public class RecipesParser {
 														.getElmoManager()
 														.create(RecipeComponent.class);
 												Item item = Finder.findItem(repo,
+														Item.class,
+														"name",
 														componentName);
 												if (item == null) {
 													item = repo
