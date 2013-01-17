@@ -1,9 +1,12 @@
+package infrastructure;
 
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import javax.persistence.EntityTransaction;
 
 import org.openrdf.elmo.ElmoModule;
 import org.openrdf.elmo.sesame.SesameManager;
@@ -22,12 +25,13 @@ import org.openrdf.sail.config.SailImplConfig;
 import org.openrdf.sail.inferencer.fc.config.ForwardChainingRDFSInferencerConfig;
 import org.openrdf.sail.memory.config.MemoryStoreConfig;
 
-class ElmoInfrastructure implements Closeable {
+public class ElmoInfrastructure implements Closeable {
 	private final LocalRepositoryManager manager;
 	private final Repository repository;
 	private final ElmoModule module;
 	private final SesameManagerFactory elmoFactory;
 	private final SesameManager elmoManager;
+	private EntityTransaction transaction;
 
 	public ElmoInfrastructure(final String baseDirName,
 			final String repositoryId, final List<Class<?>> concepts)
@@ -105,5 +109,15 @@ class ElmoInfrastructure implements Closeable {
 
 	public SesameManager getElmoManager() {
 		return elmoManager;
+	}
+
+	public void beginTransaction() {
+		transaction = elmoManager
+				.getTransaction();
+		transaction.begin();
+	}
+
+	public void commitTransaction() {
+		transaction.commit();
 	}
 }

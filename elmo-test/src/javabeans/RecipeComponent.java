@@ -1,7 +1,8 @@
+package javabeans;
 import org.openrdf.elmo.annotations.rdf;
 
-@rdf(":Component")
-public interface Component {
+@rdf(":RecipeComponent")
+public interface RecipeComponent {
 	@rdf(":item")
 	Item getItem();
 
@@ -12,6 +13,8 @@ public interface Component {
 
 	void setCount(double count);
 
-	// private final UNIT unit;
+	@rdf(":unit")
+	ItemUnit getUnit();
+	void setUnit(ItemUnit unit);
 
 }

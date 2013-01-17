@@ -1,7 +1,14 @@
+import infrastructure.ElmoInfrastructure;
+import input.FileInput;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+
+import javabeans.RecipeComponent;
+import javabeans.Item;
+import javabeans.Recipe;
 
 import javax.persistence.EntityTransaction;
 
@@ -13,13 +20,15 @@ import org.openrdf.repository.config.RepositoryConfigException;
 
 public class RecipesReader {
 
+	private final static List<Class<?>> JAVA_BEANS = Arrays.<Class<?>> asList(
+			Recipe.class, RecipeComponent.class, Item.class);
+
 	public static void main(final String[] args) throws IOException,
 			RepositoryException, RepositoryConfigException,
 			NoSuchFieldException, SecurityException, IllegalArgumentException,
 			IllegalAccessException {
 		try (final ElmoInfrastructure repo = new ElmoInfrastructure(
-				"target/repo", "test-db", Arrays.<Class<?>> asList(
-						Recipe.class, Component.class, Item.class))) {
+				"target/repo", "test-db", JAVA_BEANS)) {
 			System.out.println("----- initial ------");
 			repo.print();
 			final RepositoryConnection cxn = repo.getConnection();
@@ -27,9 +36,7 @@ public class RecipesReader {
 			cxn.commit();
 			cxn.close();
 
-			final EntityTransaction transaction = repo.getElmoManager()
-					.getTransaction();
-			transaction.begin();
+			repo.beginTransaction();
 			try {
 				final String site = "https://www.magiclands.ru";
 				final String url = site + "/library/recipes/jeweller/";
@@ -38,15 +45,15 @@ public class RecipesReader {
 				try (final InputStream is = FileInput.getFileStream("jeweller.html")) {
 					final HtmlCleaner c = new HtmlCleaner();
 					final TagNode rootNode = c.clean(is);
-					recipes = Parser.parseRecipes(rootNode, site, url, repo);
+					recipes = RecipesParser.parseRecipes(rootNode, site, url, repo);
 					for (final Recipe recipe : recipes) {
 						System.out.println(recipe);
 					}
 				}
 			} finally {
-				transaction.commit();
+				repo.commitTransaction();
 			}
-
+			
 			System.out.println("----- updated ------");
 			repo.print();
 			int recipesCount = 0;
@@ -56,8 +63,8 @@ public class RecipesReader {
 			}
 			System.out.println("Recipes: " + recipesCount);
 			int componentsCount = 0;
-			for (@SuppressWarnings("unused") final Component component : repo.getElmoManager().findAll(
-					Component.class)) {
+			for (@SuppressWarnings("unused") final RecipeComponent component : repo.getElmoManager().findAll(
+					RecipeComponent.class)) {
 				componentsCount++;
 			}
 			System.out.println("Components: " + componentsCount);

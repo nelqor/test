@@ -1,5 +1,6 @@
+package javabeans;
 
-public enum Unit {
+public enum ItemUnit {
 	ЯЩИК("ящик", "ящика", "ящиков"), //
 	ШТУКА("штука", "штуки", "штук", "шт"), //
 	КАМЕНЬ("камень", "камня", "камней"), //
@@ -19,7 +20,7 @@ public enum Unit {
 
 	private final String[] unitStr;
 
-	private Unit(final String... unitStr) {
+	private ItemUnit(final String... unitStr) {
 		this.unitStr = unitStr;
 	}
 

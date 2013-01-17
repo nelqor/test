@@ -1,10 +1,17 @@
+import infrastructure.ElmoInfrastructure;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UnknownFormatConversionException;
 
+import javabeans.RecipeComponent;
+import javabeans.Item;
+import javabeans.Recipe;
+import javabeans.ItemUnit;
+
 import org.htmlcleaner.TagNode;
 
-public class Parser {
+public class RecipesParser {
 
 	public enum DIV {
 		КОМПОНЕНТЫ
@@ -21,7 +28,7 @@ public class Parser {
 			String event = null;
 			Integer time = null;
 			DIV div = null;
-			final List<Component> components = new ArrayList<>();
+			final List<RecipeComponent> components = new ArrayList<>();
 			for (final TagNode td : recipeNode.getAllElements(true)) {
 				if ("td".equals(td.getName())) {
 					final String tdClass = td.getAttributeByName("class");
@@ -88,17 +95,17 @@ public class Parser {
 															componentName
 																	.length() + 2)
 													.trim();
-											Unit unit = null;
-											for (final Unit u : Unit.values()) {
+											ItemUnit unit = null;
+											for (final ItemUnit u : ItemUnit.values()) {
 												if (u.equals(countStr)) {
 													unit = u;
 													break;
 												}
 											}
 											if (unit != null) {
-												final Component component = repo
+												final RecipeComponent component = repo
 														.getElmoManager()
-														.create(Component.class);
+														.create(RecipeComponent.class);
 												Item item = Finder.findItem(repo,
 														componentName);
 												if (item == null) {

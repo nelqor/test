@@ -1,3 +1,4 @@
+package javabeans;
 import java.util.List;
 
 import org.openrdf.elmo.annotations.rdf;
@@ -15,15 +16,15 @@ public interface Recipe {
 
 	void setUri(String uri);
 
-	@rdf("http://xmlns.com/foaf/0.1/name")
+	@rdf(":name")
 	String getName();
 
 	void setName(String name);
 
 	@rdf(":components")
-	List<Component> getComponents();
+	List<RecipeComponent> getComponents();
 
-	void setComponents(List<Component> components);
+	void setComponents(List<RecipeComponent> components);
 
 	@rdf(":time")
 	int getTime();
