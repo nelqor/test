@@ -1,4 +1,4 @@
-package javabeans;
+package javabeans.elmo;
 import org.openrdf.elmo.annotations.rdf;
 
 

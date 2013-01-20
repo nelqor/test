@@ -1,20 +1,20 @@
 package main;
 
 import infrastructure.ElmoInfrastructure;
-import infrastructure.Finder;
+import infrastructure.ElmoFinder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UnknownFormatConversionException;
 
-import javabeans.RecipeComponent;
-import javabeans.Item;
-import javabeans.Recipe;
-import javabeans.ItemUnit;
+import javabeans.elmo.Item;
+import javabeans.elmo.ItemUnit;
+import javabeans.elmo.Recipe;
+import javabeans.elmo.RecipeComponent;
 
 import org.htmlcleaner.TagNode;
 
-public class RecipesParser {
+public class ElmoRecipesParser {
 
 	public enum DIV {
 		КОМПОНЕНТЫ
@@ -109,7 +109,7 @@ public class RecipesParser {
 												final RecipeComponent component = repo
 														.getElmoManager()
 														.create(RecipeComponent.class);
-												Item item = Finder.findItem(repo,
+												Item item = ElmoFinder.findItem(repo,
 														Item.class,
 														"name",
 														componentName);

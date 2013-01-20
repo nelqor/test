@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javabeans.Item;
-import javabeans.Recipe;
+import javabeans.elmo.Item;
+import javabeans.elmo.Recipe;
 
 import org.openrdf.elmo.ElmoQuery;
 
-
-public class Finder {
+public class ElmoFinder {
 
 	@SuppressWarnings("unchecked")
 	public static Item findItem(final ElmoInfrastructure repo,

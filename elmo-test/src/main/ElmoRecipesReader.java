@@ -1,7 +1,7 @@
 package main;
 
 import infrastructure.ElmoInfrastructure;
-import infrastructure.Finder;
+import infrastructure.ElmoFinder;
 import input.FileInput;
 
 import java.io.IOException;
@@ -9,9 +9,9 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-import javabeans.RecipeComponent;
-import javabeans.Item;
-import javabeans.Recipe;
+import javabeans.elmo.Item;
+import javabeans.elmo.Recipe;
+import javabeans.elmo.RecipeComponent;
 
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
@@ -19,7 +19,7 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.config.RepositoryConfigException;
 
-public class RecipesReader {
+public class ElmoRecipesReader {
 
 	private final static List<Class<?>> JAVA_BEANS = Arrays.<Class<?>> asList(
 			Recipe.class, RecipeComponent.class, Item.class);
@@ -45,7 +45,7 @@ public class RecipesReader {
 				try (final InputStream is = FileInput.getFileStream("jeweller.html")) {
 					final HtmlCleaner c = new HtmlCleaner();
 					final TagNode rootNode = c.clean(is);
-					for (final Recipe recipe : RecipesParser.parseRecipes(rootNode, site, url, repo)) {
+					for (final Recipe recipe : ElmoRecipesParser.parseRecipes(rootNode, site, url, repo)) {
 //						System.out.println(recipe);
 					}
 				}
@@ -54,7 +54,7 @@ public class RecipesReader {
 				try (final InputStream is = FileInput.getFileStream("artisan.html")) {
 					final HtmlCleaner c = new HtmlCleaner();
 					final TagNode rootNode = c.clean(is);
-					for (final Recipe recipe : RecipesParser.parseRecipes(rootNode, site, url, repo)) {
+					for (final Recipe recipe : ElmoRecipesParser.parseRecipes(rootNode, site, url, repo)) {
 //						System.out.println(recipe);
 					}
 				}
@@ -63,7 +63,7 @@ public class RecipesReader {
 				try (final InputStream is = FileInput.getFileStream("alchemy.html")) {
 					final HtmlCleaner c = new HtmlCleaner();
 					final TagNode rootNode = c.clean(is);
-					for (final Recipe recipe : RecipesParser.parseRecipes(rootNode, site, url, repo)) {
+					for (final Recipe recipe : ElmoRecipesParser.parseRecipes(rootNode, site, url, repo)) {
 //						System.out.println(recipe);
 					}
 				}
@@ -89,7 +89,7 @@ public class RecipesReader {
 			for (@SuppressWarnings("unused") final Item item : repo.getElmoManager().findAll(Item.class)) {
 				itemsCount++;
 				System.out.println(item.getName()+"("+item+")");
-				for(Recipe recipe:Finder.findRecipesByComponent(repo, item))
+				for(Recipe recipe:ElmoFinder.findRecipesByComponent(repo, item))
 					System.out.println("\t"+recipe.getName()+"("+recipe+")");
 					
 			}
