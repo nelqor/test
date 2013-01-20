@@ -15,12 +15,11 @@ import org.openrdf.result.Result;
 
 public class AlibabaFinder {
 
-	public static Item findItem(final AlibabaInfrastructure repo,
+	public static Item findItem(final ObjectConnection objectConnection,
 			Class<?> cl, final String property, final String value) {
 		final String queryStr = "SELECT ?item { ?item <:"+property+"> ?value . ?item a ?type . }";
-		System.out.println(queryStr);
+//		System.out.println(queryStr);
 		try {
-			ObjectConnection objectConnection = repo.getObjectConnection();
 			try {
 				final ObjectQuery query = objectConnection.prepareObjectQuery(queryStr);
 				query.setObject("value", value);
@@ -33,7 +32,7 @@ public class AlibabaFinder {
 					queryResult.close();
 				}
 			} finally {
-				objectConnection.close();
+//				objectConnection.close();
 			}
 		} catch (RepositoryException | MalformedQueryException | QueryEvaluationException e){
 			e.printStackTrace();

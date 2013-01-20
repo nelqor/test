@@ -28,6 +28,7 @@ public class ElmoRecipesReader {
 			RepositoryException, RepositoryConfigException,
 			NoSuchFieldException, SecurityException, IllegalArgumentException,
 			IllegalAccessException {
+		long startNano = System.nanoTime();
 		try (final ElmoInfrastructure repo = new ElmoInfrastructure(
 				"target/repo", "test-db", JAVA_BEANS)) {
 //			System.out.println("----- initial ------");
@@ -88,13 +89,14 @@ public class ElmoRecipesReader {
 			int itemsCount = 0;
 			for (@SuppressWarnings("unused") final Item item : repo.getElmoManager().findAll(Item.class)) {
 				itemsCount++;
-				System.out.println(item.getName()+"("+item+")");
-				for(Recipe recipe:ElmoFinder.findRecipesByComponent(repo, item))
-					System.out.println("\t"+recipe.getName()+"("+recipe+")");
+//				System.out.println(item.getName()+"("+item+")");
+//				for(Recipe recipe:ElmoFinder.findRecipesByComponent(repo, item))
+//					System.out.println("\t"+recipe.getName()+"("+recipe+")");
 					
 			}
 			System.out.println("Items: " + itemsCount);
 		}
+		System.out.println("Time: "+((1d*System.nanoTime()-startNano)/1000000000));
 	}
 
 }

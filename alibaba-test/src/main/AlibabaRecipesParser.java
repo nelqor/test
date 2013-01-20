@@ -30,7 +30,7 @@ public class AlibabaRecipesParser {
 			final AlibabaInfrastructure repo) throws RepositoryException {
 		final List<Recipe> result = new ArrayList<Recipe>();
 		ObjectConnection objectConnection = repo.getObjectConnection();
-	//	objectConnection.setAutoCommit(false);
+		objectConnection.setAutoCommit(false);
 		try {
 			for (final TagNode recipeNode : rootNode.getElementsByAttValue("class",
 					"entry", true, false)) {
@@ -116,8 +116,7 @@ public class AlibabaRecipesParser {
 												}
 												if (unit != null) {
 													
-													final RecipeComponent component = objectConnection.addDesignation(objectConnection.getObjectFactory().createObject(), RecipeComponent.class);
-													Item item = AlibabaFinder.findItem(repo,
+													Item item = AlibabaFinder.findItem(objectConnection,
 															Item.class,
 															"name",
 															componentName);
@@ -126,8 +125,17 @@ public class AlibabaRecipesParser {
 														item = objectConnection.addDesignation(objectConnection.getObjectFactory().createObject(), Item.class);
 														item.setName(componentName);
 														objectConnection.addObject(item);
+//														objectConnection.commit();
+//														objectConnection.close();
+//														objectConnection = repo.getObjectConnection();
+//														objectConnection.setAutoCommit(false);
+//														item = AlibabaFinder.findItem(objectConnection,
+//																Item.class,
+//																"name",
+//																componentName);
 													}
 	
+													final RecipeComponent component = objectConnection.addDesignation(objectConnection.getObjectFactory().createObject(), RecipeComponent.class);
 													component.setItem(item);
 													component.setUnit(unit);
 													component
@@ -158,13 +166,13 @@ public class AlibabaRecipesParser {
 				recipe.setComponents(components);
 				recipe.setTime(time);
 				recipe.setEvent(event);
-				log.debug("Adding {}",recipe);
+//				log.debug("Adding {}",recipe);
 				objectConnection.addObject(recipe);
 				result.add(recipe);
-				break;
+//				break;
 			}
 		} finally {
-			//objectConnection.commit();
+			objectConnection.commit();
 			objectConnection.close();
 		}
 		return result;

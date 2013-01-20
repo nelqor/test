@@ -23,7 +23,7 @@ public class minimal {
 
 	  @Iri(NS + "title") 
 	  public String getTitle();
-//	  @Iri(NS + "title") 
+	  @Iri(NS + "title") 
 	  public void setTitle(String title);
 	}
 	
@@ -44,7 +44,7 @@ public class minimal {
 
 		// create a Document
 		Document doc = con.addDesignation(con.getObjectFactory().createObject(),Document.class);
-		doc.setTitle("Getting Started 2");
+		doc.setTitle("Getting Started 3");
 		Value id = con.addObject(doc);
 
 		// retrieve a Document by id
