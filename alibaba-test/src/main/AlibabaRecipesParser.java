@@ -15,6 +15,8 @@ import javabeans.alibaba.Recipe;
 import javabeans.alibaba.RecipeComponent;
 
 import org.htmlcleaner.TagNode;
+import org.openrdf.model.Literal;
+import org.openrdf.model.URI;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.object.ObjectConnection;
 import org.slf4j.Logger;
@@ -121,7 +123,7 @@ public class AlibabaRecipesParser {
 															componentName);
 													if (item == null) {
 //														item = repo.createObject(objectConnection, Item.class);
-														item = objectConnection.addDesignation(objectConnection.getObjectFactory().createObject(), Item.class);
+														item = objectConnection.addDesignation(objectConnection.getObjectFactory().createObject(":"+componentName), Item.class);
 														item.setName(componentName);
 														objectConnection.addObject(item);
 //														objectConnection.commit();
@@ -134,7 +136,8 @@ public class AlibabaRecipesParser {
 //																componentName);
 													}
 	
-													final RecipeComponent component = objectConnection.addDesignation(objectConnection.getObjectFactory().createObject(), RecipeComponent.class);
+													URI componentUri = objectConnection.getValueFactory().createURI(":"+name+"#",componentName);
+													final RecipeComponent component = objectConnection.addDesignation(objectConnection.getObjectFactory().createObject(componentUri ), RecipeComponent.class);
 													component.setItem(item);
 													component.setUnit(unit);
 													component
@@ -158,7 +161,7 @@ public class AlibabaRecipesParser {
 		
 					}
 				}
-				final Recipe recipe = objectConnection.addDesignation(objectConnection.getObjectFactory().createObject(), Recipe.class);
+				final Recipe recipe = objectConnection.addDesignation(objectConnection.getObjectFactory().createObject(":"+name), Recipe.class);
 				recipe.setUri(uri);
 				recipe.setName(name);
 				recipe.setImage(image);
