@@ -1,9 +1,13 @@
 package infrastructure;
 
 
+import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 import javax.persistence.EntityTransaction;
@@ -17,6 +21,9 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.query.GraphQueryResult;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -26,6 +33,9 @@ import org.openrdf.repository.config.RepositoryConfig;
 import org.openrdf.repository.config.RepositoryConfigException;
 import org.openrdf.repository.manager.LocalRepositoryManager;
 import org.openrdf.repository.sail.config.SailRepositoryConfig;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.n3.N3Writer;
 import org.openrdf.sail.config.SailImplConfig;
 import org.openrdf.sail.inferencer.fc.config.ForwardChainingRDFSInferencerConfig;
 import org.openrdf.sail.memory.config.MemoryStoreConfig;
@@ -37,11 +47,13 @@ public class ElmoInfrastructure implements Closeable {
 	private final SesameManagerFactory elmoFactory;
 	private final SesameManager elmoManager;
 	private EntityTransaction transaction;
+	private final String baseDirName;
 
 	public ElmoInfrastructure(final String baseDirName,
 			final String repositoryId, final List<Class<?>> concepts)
 			throws RepositoryException, RepositoryConfigException {
 
+		this.baseDirName = baseDirName;
 		final File baseDir = new File(baseDirName);
 
 		manager = new LocalRepositoryManager(baseDir);
@@ -87,6 +99,39 @@ public class ElmoInfrastructure implements Closeable {
 				System.out.println(stmt);
 				count++;
 			}
+		} finally {
+			stmts.close();
+			cxn.close();
+		}
+		System.out.println("Statements count: " + count);
+	}
+	
+	public void save() throws RepositoryException, FileNotFoundException, RDFHandlerException, QueryEvaluationException, MalformedQueryException {
+		final RepositoryConnection cxn = repository.getConnection();
+		final GraphQueryResult stmts = cxn.prepareGraphQuery(QueryLanguage.SPARQL,
+				"CONSTRUCT {?s ?p ?o .} where {?s ?p ?o . } order by ?s ?p ?o").evaluate();
+		RDFWriter writer = new N3Writer(
+				new BufferedWriter(
+						new OutputStreamWriter(
+								new FileOutputStream(
+										baseDirName+"/dump.n3"
+								)
+						)
+				)
+		);
+		long count = 0;
+		try {
+			writer.handleNamespace("rdfs",org.openrdf.model.vocabulary.RDFS.NAMESPACE);
+			writer.handleNamespace("rdf",org.openrdf.model.vocabulary.RDF.NAMESPACE);
+			writer.handleNamespace("owl",org.openrdf.model.vocabulary.OWL.NAMESPACE);
+			writer.handleNamespace("xsd",org.openrdf.model.vocabulary.XMLSchema.NAMESPACE);
+			writer.startRDF();
+			while (stmts.hasNext()) {
+				final Statement stmt = stmts.next();
+				writer.handleStatement(stmt);
+				count++;
+			}
+			writer.endRDF();
 		} finally {
 			stmts.close();
 			cxn.close();

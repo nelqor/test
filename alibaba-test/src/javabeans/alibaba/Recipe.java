@@ -1,6 +1,7 @@
 package javabeans.alibaba;
 
 import java.util.List;
+import java.util.Set;
 
 import org.openrdf.annotations.Iri;
 
@@ -19,8 +20,8 @@ public interface Recipe {
 	public void setName(String name);
 
 	@Iri(":components") 
-	public List<RecipeComponent> getComponents();
-	public void setComponents(List<RecipeComponent> components);
+	public Set<RecipeComponent> getComponents();
+	public void setComponents(Set<RecipeComponent> components);
 
 	@Iri(":time") 
 	public int getTime();

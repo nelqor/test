@@ -15,12 +15,14 @@ import javabeans.alibaba.RecipeComponent;
 
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
+import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.config.RepositoryConfigException;
 import org.openrdf.repository.object.ObjectConnection;
 import org.openrdf.result.Result;
+import org.openrdf.rio.RDFHandlerException;
 
 public class AlibabaRecipesReader {
 
@@ -30,7 +32,7 @@ public class AlibabaRecipesReader {
 	public static void main(final String[] args) throws IOException,
 			RepositoryException, RepositoryConfigException,
 			NoSuchFieldException, SecurityException, IllegalArgumentException,
-			IllegalAccessException, QueryEvaluationException {
+			IllegalAccessException, QueryEvaluationException, RDFHandlerException, MalformedQueryException {
 		long startNano = System.nanoTime();
 		try (final AlibabaInfrastructure repo = new AlibabaInfrastructure(
 				"target/repo", "test-db", JAVA_BEANS)) {
@@ -96,6 +98,7 @@ public class AlibabaRecipesReader {
 
 				// System.out.println("----- updated ------");
 				//repo.print();
+				repo.save();
 				int recipesCount = 0;
 				Result<Recipe> objects = objectConnection
 						.getObjects(Recipe.class);

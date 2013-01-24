@@ -4,7 +4,9 @@ import infrastructure.AlibabaFinder;
 import infrastructure.AlibabaInfrastructure;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UnknownFormatConversionException;
 
 import javabeans.alibaba.Item;
@@ -37,7 +39,7 @@ public class AlibabaRecipesParser {
 				String event = null;
 				Integer time = null;
 				DIV div = null;
-				final List<RecipeComponent> components = new ArrayList<>();
+				final Set<RecipeComponent> components = new HashSet<>();
 				for (final TagNode td : recipeNode.getAllElements(true)) {
 					if ("td".equals(td.getName())) {
 						final String tdClass = td.getAttributeByName("class");

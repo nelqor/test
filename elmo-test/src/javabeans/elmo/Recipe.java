@@ -1,5 +1,6 @@
 package javabeans.elmo;
 import java.util.List;
+import java.util.Set;
 
 import org.openrdf.elmo.annotations.rdf;
 
@@ -22,9 +23,9 @@ public interface Recipe {
 	void setName(String name);
 
 	@rdf(":components")
-	List<RecipeComponent> getComponents();
+	Set<RecipeComponent> getComponents();
 
-	void setComponents(List<RecipeComponent> components);
+	void setComponents(Set<RecipeComponent> components);
 
 	@rdf(":time")
 	int getTime();

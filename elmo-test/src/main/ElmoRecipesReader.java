@@ -15,9 +15,12 @@ import javabeans.elmo.RecipeComponent;
 
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.config.RepositoryConfigException;
+import org.openrdf.rio.RDFHandlerException;
 
 public class ElmoRecipesReader {
 
@@ -27,7 +30,7 @@ public class ElmoRecipesReader {
 	public static void main(final String[] args) throws IOException,
 			RepositoryException, RepositoryConfigException,
 			NoSuchFieldException, SecurityException, IllegalArgumentException,
-			IllegalAccessException {
+			IllegalAccessException, RDFHandlerException, QueryEvaluationException, MalformedQueryException {
 		long startNano = System.nanoTime();
 		try (final ElmoInfrastructure repo = new ElmoInfrastructure(
 				"target/repo", "test-db", JAVA_BEANS)) {
@@ -74,6 +77,7 @@ public class ElmoRecipesReader {
 			
 //			System.out.println("----- updated ------");
 			//repo.print();
+			repo.save();
 			int recipesCount = 0;
 			for (@SuppressWarnings("unused") final Recipe recipe : repo.getElmoManager().findAll(
 					Recipe.class)) {
