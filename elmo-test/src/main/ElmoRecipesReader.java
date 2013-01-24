@@ -73,7 +73,7 @@ public class ElmoRecipesReader {
 			}
 			
 //			System.out.println("----- updated ------");
-			repo.print();
+			//repo.print();
 			int recipesCount = 0;
 			for (@SuppressWarnings("unused") final Recipe recipe : repo.getElmoManager().findAll(
 					Recipe.class)) {

@@ -15,7 +15,7 @@ public class ElmoFinder {
 	public static Item findItem(final ElmoInfrastructure repo,
 			Class<?> cl, final String property, final String value) {
 		final String queryStr = "SELECT ?item { ?item <:"+property+"> ?value . ?item a ?type . }";
-		System.out.println(queryStr);
+//		System.out.println(queryStr);
 		final ElmoQuery query = repo.getElmoManager().createQuery(queryStr);
 		query.setParameter("value", value);
 		query.setType("type", cl);

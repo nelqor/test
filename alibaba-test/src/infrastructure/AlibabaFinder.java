@@ -19,7 +19,6 @@ public class AlibabaFinder {
 			Class<?> cl, final String property, final String value) {
 		final String queryStr = "SELECT ?item { ?item <:"+property+"> ?value . ?item a ?type . }";
 //		System.out.println(queryStr);
-		try {
 			try {
 				final ObjectQuery query = objectConnection.prepareObjectQuery(queryStr);
 				query.setObject("value", value);
@@ -31,9 +30,6 @@ public class AlibabaFinder {
 				} finally {
 					queryResult.close();
 				}
-			} finally {
-//				objectConnection.close();
-			}
 		} catch (RepositoryException | MalformedQueryException | QueryEvaluationException e){
 			e.printStackTrace();
 		}
@@ -41,7 +37,7 @@ public class AlibabaFinder {
 	}
 
 	public static List<Recipe> findRecipesByComponent(//
-			AlibabaInfrastructure repo, Item item) {
+			Item item, ObjectConnection objectConnection) {
 		final String queryStr = "SELECT DISTINCT ?recipe {"+//
 			"?recipe <:components> ?components . "+//
 			"?components <http://www.w3.org/2000/01/rdf-schema#member> ?component . " +//
@@ -49,8 +45,6 @@ public class AlibabaFinder {
 			"}";
 		ArrayList<Recipe> result = new ArrayList<Recipe>();
 		try {
-			ObjectConnection objectConnection = repo.getObjectConnection();
-			try {
 				ObjectQuery query = objectConnection.prepareObjectQuery(queryStr);
 				query.setObject("item", item);
 				final Result<Recipe> queryResult = query.evaluate(Recipe.class);
@@ -62,9 +56,6 @@ public class AlibabaFinder {
 				} finally {
 					queryResult.close();
 				}
-			} finally {
-				objectConnection.close();
-			}
 		} catch (RepositoryException | MalformedQueryException | QueryEvaluationException e) {
 			
 		}

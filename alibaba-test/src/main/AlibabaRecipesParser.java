@@ -27,11 +27,8 @@ public class AlibabaRecipesParser {
 	}
 	static List<Recipe> parseRecipes(final TagNode rootNode,
 			final String siteUrl, final String pageUrl,
-			final AlibabaInfrastructure repo) throws RepositoryException {
+			ObjectConnection objectConnection) throws RepositoryException {
 		final List<Recipe> result = new ArrayList<Recipe>();
-		ObjectConnection objectConnection = repo.getObjectConnection();
-		objectConnection.setAutoCommit(false);
-		try {
 			for (final TagNode recipeNode : rootNode.getElementsByAttValue("class",
 					"entry", true, false)) {
 				String image = null;
@@ -159,7 +156,7 @@ public class AlibabaRecipesParser {
 		
 					}
 				}
-				final Recipe recipe = repo.createObject(objectConnection, Recipe.class);
+				final Recipe recipe = objectConnection.addDesignation(objectConnection.getObjectFactory().createObject(), Recipe.class);
 				recipe.setUri(uri);
 				recipe.setName(name);
 				recipe.setImage(image);
@@ -171,10 +168,6 @@ public class AlibabaRecipesParser {
 				result.add(recipe);
 //				break;
 			}
-		} finally {
-			objectConnection.commit();
-			objectConnection.close();
-		}
 		return result;
 	}
 
