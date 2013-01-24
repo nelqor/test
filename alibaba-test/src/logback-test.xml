@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		<layout class="ch.qos.logback.classic.PatternLayout">
-			<pattern>%-4relative [%thread] %-5level %class - %msg%n</pattern>
-		</layout>
+		<encoder>
+			<pattern>%d %-5level [%thread] %logger{0}: %msg%n</pattern>
+			<!-- this quadruples logging throughput -->
+			<immediateFlush>false</immediateFlush>
+		</encoder>
 	</appender>
 
 	<logger name="org.openrdf.sail.inferencer.fc.ForwardChainingRDFSInferencerConnection">
@@ -11,8 +13,7 @@
 	</logger>
 
 	<root>
-		<level value="error" />
+		<level value="debug" />
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</root>
 </configuration>

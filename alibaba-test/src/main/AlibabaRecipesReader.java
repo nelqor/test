@@ -57,7 +57,7 @@ public class AlibabaRecipesReader {
 						for (final Recipe recipe : AlibabaRecipesParser
 								.parseRecipes(rootNode, site, url,
 										objectConnection)) {
-							System.out.println(recipe);
+							//System.out.println(recipe);
 						}
 					}
 					url = site + "/library/recipes/artisan/";
